@@ -10,6 +10,12 @@ import (
 
 func main() {
 	start_time := time.Now()
+	//step_1()
+	step_2()
+	fmt.Println("Duration:", time.Since(start_time))
+}
+
+func step_1() {
 	numbers := getNumbers()
 
 	current := 50
@@ -30,7 +36,43 @@ func main() {
 	}
 
 	fmt.Println("Answer:", counter)
-	fmt.Println("Duration:", time.Since(start_time))
+}
+
+func step_2() {
+	numbers := getNumbers()
+
+	current := 50
+	counter := 0
+
+	for _, v := range numbers {
+		current += v
+
+		if current > 99 {
+			for current > 99 {
+				current -= 100
+				counter++
+			}
+			if current == 0 {
+				counter--
+			}
+		}
+
+		if current < 0 {
+			for current < 0 {
+				current = 100 + current
+				counter++
+			}
+			if (current-v)%100 == 0 {
+				counter--
+			}
+		}
+
+		if current == 0 {
+			counter++
+		}
+	}
+
+	fmt.Println("Answer:", counter)
 }
 
 func getNumbers() []int {
