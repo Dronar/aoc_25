@@ -12,6 +12,13 @@ import (
 func main() {
 	start_time := time.Now()
 
+	//step1()
+	step2()
+
+	fmt.Println("Duration:", time.Since(start_time))
+}
+
+func step1() {
 	ranges := getRanges()
 
 	var hits []int
@@ -48,7 +55,36 @@ func main() {
 	//fmt.Printf("%d\n", hits)
 
 	fmt.Println("Sum:", sum)
-	fmt.Println("Duration:", time.Since(start_time))
+}
+
+func step2() {
+	ranges := getRanges()
+
+	var hits []int
+
+	for _, r := range ranges {
+		i := r[0]
+
+		for i <= r[1] {
+			str := strconv.Itoa(i)
+
+			if detect_repeated_string(str) {
+				hits = append(hits, i)
+			}
+
+			i++
+		}
+
+	}
+
+	sum := 0
+	for _, num := range hits {
+		sum += num
+	}
+
+	//fmt.Printf("%d\n", hits)
+
+	fmt.Println("Sum:", sum)
 }
 
 func getRanges() [][2]int {
@@ -74,4 +110,14 @@ func getRanges() [][2]int {
 	}
 
 	return ranges
+}
+
+func detect_repeated_string(s string) bool {
+	n := len(s)
+	if n == 0 {
+		return false
+	}
+	d := s + s
+	window := d[1 : 2*n-1]
+	return strings.Contains(window, s)
 }
