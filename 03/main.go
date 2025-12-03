@@ -13,6 +13,20 @@ func main() {
 
 	numbers := getNumbers()
 
+	//power := step1(numbers)
+	power := step2(numbers)
+
+	sum := 0
+	for _, num := range power {
+		sum += num
+	}
+
+	fmt.Println("Sum:", sum)
+
+	fmt.Println("Duration:", time.Since(start_time))
+}
+
+func step1(numbers [][]byte) []int {
 	var power []int
 
 	for _, number := range numbers {
@@ -38,13 +52,42 @@ func main() {
 		power = append(power, temp)
 	}
 
-	sum := 0
-	for _, num := range power {
-		sum += num
+	return power
+}
+
+func step2(numbers [][]byte) []int {
+	var power []int
+
+	for _, number := range numbers {
+
+		// Init empty array
+		var current_power [12]byte
+		for i := range 12 {
+			current_power[i] = byte('0')
+		}
+
+		for i, digit := range number {
+
+			for j, value := range current_power {
+				digits_to_replace := min(12-j, len(number)-j)
+
+				if digit > value && digits_to_replace <= len(number)-i {
+					current_power[j] = digit
+
+					for k := j + 1; k < 12; k++ {
+						current_power[k] = byte('0')
+					}
+					break
+				}
+			}
+		}
+
+		temp, _ := strconv.Atoi(string(current_power[:]))
+
+		power = append(power, temp)
 	}
 
-	fmt.Println("Sum:", sum)
-	fmt.Println("Duration:", time.Since(start_time))
+	return power
 }
 
 func getNumbers() [][]byte {
