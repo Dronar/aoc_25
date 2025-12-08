@@ -48,6 +48,12 @@ func main() {
 		return distances[a].length < distances[b].length
 	})
 
+	step2(distances)
+
+	fmt.Println("Duration:", time.Since(start_time))
+}
+
+func step1(distances []distance) {
 	var connections [][]point
 
 	for i := range 1000 {
@@ -106,8 +112,49 @@ func main() {
 	}
 
 	fmt.Println("Circuits:", largest*second*third)
+}
 
-	fmt.Println("Duration:", time.Since(start_time))
+func step2(distances []distance) {
+	var connections [][]point
+
+	for i, _ := range distances {
+		found1 := -1
+		found2 := -1
+
+		for j, connection := range connections {
+			if slices.Contains(connection, distances[i].p1) && found1 < 0 {
+				found1 = j
+			}
+			if slices.Contains(connection, distances[i].p2) && found2 < 0 {
+				found2 = j
+			}
+		}
+
+		if found1 >= 0 && found1 == found2 {
+		} else if found1 >= 0 && found2 >= 0 {
+			connections[found1] = append(connections[found1], connections[found2]...)
+			connections[found2] = connections[len(connections)-1]
+			connections = connections[:len(connections)-1]
+
+			if i > 100 && len(connections) == 1 {
+				fmt.Printf("Circuit complete (iteration: %d)! ", i)
+				fmt.Printf("[%d, %d, %d] - ", distances[i].p1.x, distances[i].p1.y, distances[i].p1.z)
+				fmt.Printf("[%d, %d, %d]\n", distances[i].p2.x, distances[i].p2.y, distances[i].p2.z)
+				fmt.Println("Sum: ", distances[i].p1.x*distances[i].p2.x)
+
+				break
+			}
+
+		} else if found1 >= 0 {
+			connections[found1] = append(connections[found1], distances[i].p2)
+		} else if found2 >= 0 {
+			connections[found2] = append(connections[found2], distances[i].p1)
+		} else {
+			connections = append(connections, []point{})
+			connections[len(connections)-1] = append(connections[len(connections)-1], distances[i].p1)
+			connections[len(connections)-1] = append(connections[len(connections)-1], distances[i].p2)
+		}
+	}
 }
 
 func getDistance(p1, p2 point) int {
