@@ -12,7 +12,8 @@ import (
 func main() {
 	start_time := time.Now()
 
-	numbers, operations := getData()
+	// numbers, operations := step1()
+	numbers, operations := step2()
 
 	total := 0
 
@@ -36,7 +37,7 @@ func main() {
 	fmt.Println("Duration:", time.Since(start_time))
 }
 
-func getData() ([][]int, []byte) {
+func step1() ([][]int, []byte) {
 	file, err := os.Open("input.txt")
 	if err != nil {
 		fmt.Println(err)
@@ -67,6 +68,52 @@ func getData() ([][]int, []byte) {
 				numbers[j] = append(numbers[j], number)
 			}
 		}
+	}
+
+	return numbers, operations
+}
+
+func step2() ([][]int, []byte) {
+	file, err := os.Open("input.txt")
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer file.Close()
+
+	var operations []byte
+	var numbers [][]int
+	numbers = append(numbers, []int{})
+
+	var grid [][]byte
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		grid = append(grid, []byte(scanner.Text()))
+	}
+
+	column := len(grid[0]) - 1
+
+	for column >= 0 {
+		row := 0
+		var digits []byte
+
+		for row < len(grid) {
+			value := grid[row][column]
+			if value >= byte('1') && value <= byte('9') {
+				digits = append(digits, value)
+			}
+			if value == byte('+') || value == byte('*') {
+				operations = append(operations, value)
+			}
+			row++
+		}
+
+		if len(digits) > 0 {
+			number, _ := strconv.Atoi(string(digits[:]))
+			numbers[len(numbers)-1] = append(numbers[len(numbers)-1], number)
+		} else {
+			numbers = append(numbers, []int{})
+		}
+		column--
 	}
 
 	return numbers, operations
