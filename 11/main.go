@@ -77,7 +77,7 @@ func main() {
 	valid_paths := 0
 
 	//visited1 := make(map[string]bool)
-	//connections.DFS_part1("svr", "out", visited1, &valid_paths)
+	//connections.DFS_part1("you", "out", visited1, &valid_paths)
 
 	visited2 := make(map[string]int)
 	valid_paths = connections.DFS_part2("svr", "out", false, false, visited2)
